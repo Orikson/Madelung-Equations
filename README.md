@@ -35,3 +35,24 @@ We define velocity as the gradient of the quantum action, $\vec{v} = \nabla S/m$
 Additionally, one can also find that probability current density $\vec{j}$ follows the same form as the classical hydrodynamics current density,
 
 $$\vec{j} = \frac{1}{m} \rho \vec{v}$$
+
+### Numerical Discretization
+We discretize the Madelung Equations using a technique common to classiscal computational fluid dynamics: smoothed particle hydrodynamics (SPH). One benefit of SPH over mesh-based methods is that it is a Lagrangian method, which is useful for adapting to complex or unbounded domains. 
+
+Our implementation follows that outlined by [Mocz and Succi, 2015](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.91.053304), adapted to two dimensions. 
+
+
+
+We choose a Gaussian kernel for the smoothing function as opposed to a cubic-spline. Although the cubic-spline has compact support (i.e. it is zero outside of a certain radius) and thus provides computational benefit over the Gaussian kernel, it is less accurate.
+
+
+
+## Installation
+This project has been tested using [Python 3.11.3](https://www.python.org/downloads/release/python-3113/) and [Taichi 1.6.0](https://github.com/taichi-dev/taichi/releases), on Windows and Linux.
+
+You can install the required packages using the following command:
+```bash
+pip install -r requirements.txt
+```
+
+
