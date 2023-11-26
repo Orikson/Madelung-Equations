@@ -40,19 +40,22 @@ if __name__ == '__main__':
         if not gui.running:
             break
         particles.step()
+
+        particles.densityImage(width, height, 4, -2)
+        #print(particles.image.to_numpy())
+        img = particles.image.to_numpy()
+        img = cm.plasma(img / (img.max()))
+        video_manager.write_frame(img)
+        gui.set_image(img)
+
         particles.plot()
+        
         gui.show()
         
         #print(particles.p_tensor.to_numpy())
         
         print(f'Done with step {i}/{steps}', end='\r')
         i += 1
-        if (i % 2 == 0):
-            particles.densityImage(width, height, 4, -2)
-            #print(particles.image.to_numpy())
-            img = particles.image.to_numpy()
-            img = cm.plasma(img / (img.max()))
-            video_manager.write_frame(img)
     
     video_manager.make_video(gif=False, mp4=True)
     
