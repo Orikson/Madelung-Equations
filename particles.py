@@ -54,7 +54,8 @@ class Particles:
         Velocities are set to 0
         '''
         for i in range(self.N):
-            self.pos[i] = 2.0 * ti.Vector([ti.random(), ti.random()]) - 1.0
+            theta = ti.random() * 2 * ti.math.pi
+            self.pos[i] = ti.randn(ti.f32) * ti.Vector([ti.cos(theta), ti.sin(theta)])
             self.vel[i] = ti.Vector([0.0, 0.0])
             self.acc[i] = ti.Vector([0.0, 0.0])
     
@@ -157,7 +158,7 @@ class Particles:
         Plot particles
         '''
         for i in range(self.N):
-            pos = [self.pos[i][0]*0.5 + 0.5, self.pos[i][1]*0.5 + 0.5]
+            pos = [self.pos[i][0]*0.25 + 0.5, self.pos[i][1]*0.25 + 0.5]
             vel = [self.vel[i][0]*0.5, self.vel[i][1]*0.5]
             
             self.gui.circle(pos=pos, radius=5, color=0xffffff)
@@ -170,3 +171,21 @@ class Particles:
         self.update_density()
         self.update_pressure()
         self.update()
+
+    def setImage(self, image):
+        self.image = image
+
+    @ti.kernel
+    def densityImage(self, width: ti.i32, height: ti.i32, scale: ti.f32, offset: ti.f32):
+        '''
+        Generate intensity map of probability density
+        '''
+        for i,j in ti.ndrange(width, height):
+            density = 0.0
+            pos = ti.Vector([i / width, j / height]) * scale + offset
+
+            for k in range(self.N):
+                density += self.m * self.gaussian_kernel(pos - self.pos[k], self.h)
+            
+            self.image[i,j] = density
+
