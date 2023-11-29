@@ -39,14 +39,6 @@ class Particles:
         self.initialize()
 
     @ti.kernel
-    def test(self):# -> ti.f32:
-        r = ti.Vector([0.0, 0.0]) - ti.Vector([0.5, 0.0])
-        Wij = self.gaussian_kernel(r, ti.static(self.h))
-        gWij = self.gaussian_kernel_grad(r, ti.static(self.h))
-        dWij = self.gaussian_kernel_hess(r, ti.static(self.h))
-        print(Wij, gWij, dWij)
-
-    @ti.kernel
     def initialize(self):
         '''
         Initialize all particles

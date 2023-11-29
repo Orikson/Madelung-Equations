@@ -1,5 +1,4 @@
 import taichi as ti
-from particles2D import Particles2D
 from particles import Particles
 from matplotlib import cm
 
@@ -9,7 +8,7 @@ ti.init(arch=ti.gpu)
 # Particle System Parameters #
 #============================#
 N = 200
-h = 1 #200 / N
+h = 200 / N
 dt = 0.1
 
 #=====================#
@@ -30,33 +29,31 @@ if __name__ == '__main__':
     gui = ti.GUI('SPH', (width, height))
     video_manager = ti.tools.VideoManager(output_dir=f'./output/', framerate=24, automatic_build=False)
     
-    #particles = Particles2D(N, h, dt, gui, width, height)
     particles = Particles(N, h, dt, -0.75, gui)
     particles.setImage(image)
     
-    #for i in range(steps):
     i=0
     while True:
         if not gui.running:
             break
+        # Compute one timestep
         particles.step()
 
+        # Update density image
         particles.densityImage(width, height, 4, -2)
-        #print(particles.image.to_numpy())
         img = particles.image.to_numpy()
         img = cm.plasma(img / (img.max()))
         video_manager.write_frame(img)
         gui.set_image(img)
 
+        # Plot particle positions and velocities
         particles.plot()
         
+        # Update GUI
         gui.show()
-        
-        #print(particles.p_tensor.to_numpy())
         
         print(f'Done with step {i}/{steps}', end='\r')
         i += 1
     
     video_manager.make_video(gif=False, mp4=True)
     
-    #print(particles.test())
