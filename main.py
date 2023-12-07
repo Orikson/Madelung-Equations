@@ -1,35 +1,45 @@
 import taichi as ti
 from particles import Particles
 from matplotlib import cm
+import argparse
 
-ti.init(arch=ti.gpu)
+# Parse arguments
+parser = argparse.ArgumentParser(add_help=False)
+
+# 0 - time independent 2D harmonic oscillator
+# 1 - time dependent 2D harmonic oscillator
+parser.add_argument('scene', type=int)
+
+parser.add_argument('--N', type=int, default=200)
+parser.add_argument('--dt', type=float, default=0.1)
+parser.add_argument('-w', '--width', type=int, default=500)
+parser.add_argument('-h', '--height', type=int, default=500)
+args = parser.parse_args()
+
+scene = args.scene
 
 #============================#
 # Particle System Parameters #
 #============================#
-N = 200
+N = args.N
 h = 200 / N
-dt = 0.1
-
-#=====================#
-# Simulation Settings #
-#=====================#
-T = 10.0
+dt = args.dt
+lmbda = -0.75 if scene == 0 else 0.0
 
 #=====================#
 # Plotting Parameters #
 #=====================#
-width = 500
-height = 500
+width = args.width
+height = args.height
 
-steps = int(T/dt)
+ti.init(arch=ti.gpu)
 image = ti.field(dtype=ti.f32, shape=(width, height))
 
 if __name__ == '__main__':
     gui = ti.GUI('SPH', (width, height))
     video_manager = ti.tools.VideoManager(output_dir=f'./output/', framerate=24, automatic_build=False)
     
-    particles = Particles(N, h, dt, -0.75, gui)
+    particles = Particles(N, h, dt, lmbda, gui, scene)
     particles.setImage(image)
     
     i=0
@@ -52,7 +62,7 @@ if __name__ == '__main__':
         # Update GUI
         gui.show()
         
-        print(f'Done with step {i}/{steps}', end='\r')
+        print(f'Done with step {i}', end='\r')
         i += 1
     
     video_manager.make_video(gif=False, mp4=True)

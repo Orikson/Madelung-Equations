@@ -16,12 +16,13 @@ class Particles:
         '''
         return k * x
 
-    def __init__(self, N, h, dt, lmbda, gui):
+    def __init__(self, N, h, dt, lmbda, gui, scene):
         self.N = N
         self.h = h
         self.m = 1/N
         self.dt = dt
         self.lmbda = lmbda
+        self.scene = scene
 
         self.pos = ti.Vector.field(2, dtype=ti.f32, shape=N)    # position (N,2)
         self.vel = ti.Vector.field(2, dtype=ti.f32, shape=N)    # velocity (N,2)
@@ -46,9 +47,13 @@ class Particles:
         Velocities are set to 0
         '''
         for i in range(self.N):
-            theta = ti.random() * 2 * ti.math.pi
-            self.pos[i] = ti.randn(ti.f32) * ti.Vector([ti.cos(theta), ti.sin(theta)])
-            self.vel[i] = ti.Vector([0.0, 0.0])
+            if self.scene == 0:
+                self.pos[i] = 2.0 * ti.Vector([ti.random() * 2.0, ti.random()]) - 1.0
+                self.vel[i] = ti.Vector([0.0, 0.0])
+            elif self.scene == 1:
+                theta = ti.random() * 2 * ti.math.pi
+                self.pos[i] = ti.randn(ti.f32) * ti.Vector([ti.cos(theta), ti.sin(theta)])
+                self.vel[i] = ti.Vector([0.25, 0.25])
             self.acc[i] = ti.Vector([0.0, 0.0])
     
     @ti.func
