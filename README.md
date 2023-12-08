@@ -3,6 +3,8 @@ Computational software for solving the Madelung Equations. A project made for AP
 
 Authors: Eron Ristich, and Samarth Dev
 
+Presented on December 7th, 2023, at Arizona State University. [Presentation slides](https://github.com/Orikson/Madelung-Equations/blob/main/Madelung_Equations_Presentation.pdf).
+
 ## The Madelung Equations
 The Madelung Equations are a set of equations proposed by Erwin Madelung in 1926 to describe a more physical interpretation of the Schr&ouml;dinger Equation. Notably, Madelung's analysis resulted in a set of equations that are similar in nature to those of classical hydrodynamics, and are often referred to as the "hydrodynamic" interpretation of the Schr&ouml;dinger Equation. The Madelung Equations are as follows:
 
